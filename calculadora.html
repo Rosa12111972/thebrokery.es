@@ -12,7 +12,9 @@
 .section-title{font-size:clamp(26px,4vw,38px);text-align:center;margin-bottom:14px;}
 .section-sub{text-align:center;color:var(--muted);max-width:640px;margin:0 auto 48px;font-size:16px;}
 
-.mortgage-section{ background:var(--bg-alt); }
+.mortgage-section{ position:relative; background:var(--bg-alt); overflow:hidden; }
+.mortgage-section::before{content:"";position:absolute;inset:0;background:url('img/hero-metropolis.jpg') center/cover no-repeat;filter:grayscale(1);opacity:.1;}
+.mortgage-section .wrap{position:relative;z-index:1;}
 .mortgage-box{
   max-width:1000px; margin:0 auto; background:var(--white);
   border:1px solid var(--border); border-radius:10px; padding:40px;

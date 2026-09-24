@@ -310,7 +310,9 @@ footer a:hover{color:#fff;}
 @media (max-width:640px){.work-with-us{padding:40px 10px}.wwu-box{padding:56px 20px 50px}.btn-pill{padding:18px 26px}.btn-pill span{width:36px}}
 
 /* ---------- PÁGINAS INTERIORES ---------- */
-.page-top{padding:150px 0 50px;background:var(--bg-alt);}
+.page-top{position:relative;padding:150px 0 50px;background:var(--bg-alt);overflow:hidden;}
+.page-top::before{content:"";position:absolute;inset:0;background:url('img/hero-metropolis.jpg') center/cover no-repeat;filter:grayscale(1);opacity:.1;}
+.page-top .wrap{position:relative;z-index:1;}
 .page-top .title{margin-bottom:10px;}
 .breadcrumb{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:18px;}
 .breadcrumb a:hover{color:var(--accent);}
