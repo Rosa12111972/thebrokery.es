@@ -1,0 +1,38 @@
+name: Actualizar propiedades desde Inmovilla
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # cada día a las 06:00 UTC (08:00 en verano, 07:00 en invierno)
+  workflow_dispatch:       # botón «Run workflow» para actualizar a mano
+  push:
+    paths:
+      - 'scripts/inmovilla_xml.py'
+      - '.github/workflows/propiedades-inmovilla.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: propiedades-inmovilla
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generar propiedades.json desde el XML de Inmovilla
+        env:
+          # Si existe el secreto INMOVILLA_XML_URL se usa ese; si no, la URL de la agencia 14559.
+          INMOVILLA_XML_URL: ${{ secrets.INMOVILLA_XML_URL || 'http://procesos.apinmo.com/xml/v2/sDPen1at/14559-web.xml' }}
+        run: python3 scripts/inmovilla_xml.py
+      - name: Guardar cambios
+        run: |
+          if git ls-files --error-unmatch propiedades.json >/dev/null 2>&1 && git diff --quiet -- propiedades.json; then
+            echo "Sin cambios en las propiedades"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add propiedades.json
+          git commit -m "Actualizar propiedades desde Inmovilla"
+          git push

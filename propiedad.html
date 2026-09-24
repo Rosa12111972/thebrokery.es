@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propiedad | The Brokery España</title>
+<meta name="description" content="Ficha de la propiedad: fotos, características, calificación energética y contacto con The Brokery España.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23231f20%22/><text x=%2250%22 y=%2266%22 font-size=%2248%22 text-anchor=%22middle%22 fill=%22%23ffffff%22 font-family=%22Arial,sans-serif%22 letter-spacing=%222%22>TB</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brokery.css">
+</head>
+<body>
+
+<header id="top" data-solid data-plantilla></header>
+
+<section class="page-top" style="padding-bottom:30px;">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="boutique.html">Inicio</a> / <a href="propiedades.html">Propiedades</a> / <span id="migaRef">Ficha</span></div>
+    <div id="ficha" role="status"><p>Cargando la propiedad…</p></div>
+  </div>
+</section>
+
+<footer data-plantilla></footer>
+
+<a class="wa-float" hidden href="#" data-wa="Hola, vengo de la web de The Brokery y quiero más información." target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.02 3C9.4 3 4 8.4 4 15.02c0 2.35.63 4.55 1.72 6.45L4 29l7.72-1.68a12 12 0 0 0 4.3.78c6.63 0 12.02-5.4 12.02-12.02C28.04 8.4 22.65 3 16.02 3zm0 21.9c-1.9 0-3.68-.5-5.22-1.4l-.37-.22-4.6 1 1.02-4.48-.24-.38a9.86 9.86 0 0 1-1.5-5.4c0-5.46 4.45-9.9 9.91-9.9 5.46 0 9.9 4.44 9.9 9.9 0 5.47-4.44 9.9-9.9 9.9zm5.44-7.42c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.24-.46-2.36-1.46-.87-.78-1.46-1.74-1.63-2.03-.17-.3-.02-.46.13-.6.13-.13.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.71 2-1.4.25-.7.25-1.29.17-1.4-.07-.13-.27-.2-.57-.35z"/></svg>
+</a>
+
+<script src="legal-data.js"></script>
+<script src="brokery-comun.js"></script>
+<script>
+/* ---------- ficha de una propiedad (propiedad.html?ref=…) ---------- */
+const ref = new URLSearchParams(location.search).get('ref') || '';
+const CEE_LETRAS = ['A','B','C','D','E','F','G'];
+
+function galeria(fotos){
+  if(!fotos.length) return '<div class="gallery"><div class="gallery-main"></div></div>';
+  return `<div class="gallery">
+    <div class="gallery-main" id="gMain" style="background-image:url('${esc(fotos[0])}')" role="img" aria-label="Foto 1 de ${fotos.length}">
+      ${fotos.length > 1 ? `<button type="button" class="gallery-nav prev" aria-label="Foto anterior">‹</button><button type="button" class="gallery-nav next" aria-label="Foto siguiente">›</button>` : ''}
+      <span class="gallery-count" id="gCount">1 / ${fotos.length}</span>
+    </div>
+    <div class="gallery-side">
+      <div style="background-image:url('${esc(fotos[1] || fotos[0])}')"></div>
+      <div style="background-image:url('${esc(fotos[2] || fotos[0])}')"></div>
+    </div>
+  </div>`;
+}
+
+function escalaCEE(p){
+  const letra = String(p.cee || '').toUpperCase().replace(/\+/g, '');
+  if(!CEE_COLORS[letra]) return '<p>Calificación energética: <strong>en trámite</strong>.</p>';
+  return `<p>Calificación de consumo de energía: <strong>${esc(String(p.cee).toUpperCase())}</strong></p>
+    <div class="cee-scale" aria-hidden="true">${CEE_LETRAS.map(l => `<span class="${l === letra ? 'on' : ''}" style="background:${CEE_COLORS[l]};color:${'CD'.includes(l)?'#111':'#fff'}">${l}</span>`).join('')}</div>`;
+}
+
+function pintar(p){
+  document.title = `${p.titulo} | The Brokery España`;
+  $('#migaRef').textContent = p.ref ? `Ref. ${p.ref}` : 'Ficha';
+  const fotos = p.fotos || [];
+  const hechos = [
+    p.dormitorios && [p.dormitorios, 'Dormitorios'],
+    p.banos && [p.banos, 'Baños'],
+    p.m2 && [`${p.m2} m²`, 'Construidos'],
+    p.parcela ? [`${p.parcela} m²`, 'Parcela'] : (p.m2Utiles && [`${p.m2Utiles} m²`, 'Útiles'])
+  ].filter(Boolean);
+  const detalles = [
+    p.tipo && ['Tipo', p.tipo],
+    p.conservacion && ['Estado', p.conservacion],
+    p.antiguedad && ['Año de construcción', p.antiguedad],
+    p.planta && p.planta !== '0' && ['Planta', p.planta],
+    p.m2Utiles && ['Superficie útil', `${p.m2Utiles} m²`],
+    p.ref && ['Referencia', p.ref]
+  ].filter(Boolean);
+  const asunto = `Propiedad Ref. ${p.ref} — ${p.titulo}`;
+  $('#ficha').innerHTML = `
+    <span class="eyebrow">${esc(p.operacion || 'Venta')} · ${esc(p.zona || '')}</span>
+    <h1 class="title" style="margin-bottom:24px;">${esc(p.titulo)}</h1>
+    ${galeria(fotos)}
+    <div class="ficha-grid">
+      <div>
+        <div class="ficha-price">${precioHTML(p)}</div>
+        ${hechos.length ? `<div class="ficha-facts">${hechos.map(([v, t]) => `<div><b>${esc(v)}</b><span>${t}</span></div>`).join('')}</div>` : ''}
+        ${p.descripcion ? `<h2 class="ficha-h">Descripción</h2><div class="ficha-desc">${esc(p.descripcion)}</div>` : ''}
+        ${p.extras && p.extras.length ? `<h2 class="ficha-h">Características</h2><ul class="extras">${p.extras.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+        ${detalles.length ? `<h2 class="ficha-h">Detalles</h2><ul class="extras">${detalles.map(([k, v]) => `<li>${k}: <strong>${esc(v)}</strong></li>`).join('')}</ul>` : ''}
+        <h2 class="ficha-h">Certificado energético</h2>
+        ${escalaCEE(p)}
+        ${p.coords ? `<h2 class="ficha-h">Ubicación aproximada</h2><div id="fichaMapa" class="listing-map" style="height:360px;"><button type="button" class="btn btn-line" id="verMapa" style="margin:150px auto 0;display:flex;">Ver en el mapa</button></div><p class="map-note" style="margin-top:-18px;">Por privacidad, se muestra la zona y no la dirección exacta. Mapa: © OpenStreetMap, © CARTO.</p>` : ''}
+        <p class="ficha-legal">Tienes a tu disposición el Documento Informativo Abreviado de esta vivienda (Real Decreto 515/1989): pídenoslo sin compromiso. ${p.operacion === 'Alquiler' ? 'Los gastos de gestión inmobiliaria y de formalización del contrato corren a cargo del arrendador (Ley 12/2023).' : 'El precio no incluye impuestos (IVA o ITP, y AJD) ni gastos de notaría, registro y gestoría.'} Superficies aproximadas. Información sin carácter contractual.</p>
+      </div>
+      <aside class="ficha-aside">
+        <h3>¿Te interesa esta propiedad?</h3>
+        <form id="fichaForm" novalidate>
+          <input type="hidden" name="Propiedad" value="${esc(asunto)}">
+          <div class="field"><label for="fNombre">Nombre *</label><input id="fNombre" name="Nombre" required autocomplete="name"></div>
+          <div class="field"><label for="fTel">Teléfono *</label><input id="fTel" name="Teléfono" type="tel" required autocomplete="tel"></div>
+          <div class="field"><label for="fEmail">Email</label><input id="fEmail" name="Email" type="email" autocomplete="email"></div>
+          <div class="field"><label for="fMsg">Mensaje</label><textarea id="fMsg" name="Mensaje">Hola, me gustaría recibir más información y el Documento Informativo Abreviado de esta propiedad.</textarea></div>
+          <div class="rgpd-box" data-rgpd></div>
+          <label class="check"><input type="checkbox" name="privacidad" required> <span>He leído y acepto la <a href="privacidad.html" target="_blank" style="color:var(--accent);text-decoration:underline;">Política de Privacidad</a>. *</span></label>
+          <label class="check"><input type="checkbox" name="comercial"> <span>Acepto recibir comunicaciones comerciales (opcional).</span></label>
+          <button type="submit" class="btn btn-dark" style="width:100%;">Solicitar información</button>
+          <p class="form-msg" role="status"></p>
+        </form>
+      </aside>
+    </div>`;
+  rellenarLegal($('#ficha'));
+  $('#fichaForm').addEventListener('submit', e => { e.preventDefault(); sendForm(e.target, 'Solicitud de información de propiedad'); });
+
+  // Galería
+  let i = 0;
+  const mover = d => {
+    i = (i + d + fotos.length) % fotos.length;
+    $('#gMain').style.backgroundImage = `url('${fotos[i].replace(/'/g, '%27')}')`;
+    $('#gMain').setAttribute('aria-label', `Foto ${i + 1} de ${fotos.length}`);
+    $('#gCount').textContent = `${i + 1} / ${fotos.length}`;
+  };
+  const prev = $('.gallery-nav.prev'), next = $('.gallery-nav.next');
+  if(prev) prev.addEventListener('click', () => mover(-1));
+  if(next) next.addEventListener('click', () => mover(1));
+  document.addEventListener('keydown', e => { if(fotos.length > 1 && e.key === 'ArrowLeft') mover(-1); if(fotos.length > 1 && e.key === 'ArrowRight') mover(1); });
+
+  // Mapa aproximado, solo si el visitante lo pide
+  const verMapa = $('#verMapa');
+  if(verMapa) verMapa.addEventListener('click', () => {
+    const css = document.createElement('link'); css.rel = 'stylesheet';
+    css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+    document.head.appendChild(css);
+    const js = document.createElement('script');
+    js.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+    js.onload = () => {
+      $('#fichaMapa').innerHTML = '';
+      const m = L.map('fichaMapa', {scrollWheelZoom:false}).setView(p.coords, 14);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:16}).addTo(m);
+      L.circle(p.coords, {radius:250, color:'#231f20', weight:1, fillColor:'#49b9d4', fillOpacity:.35}).addTo(m);
+    };
+    document.head.appendChild(js);
+  });
+}
+
+cargarPropiedades().then(lista => {
+  const p = lista.find(x => String(x.ref) === ref);
+  if(!p){
+    $('#ficha').innerHTML = `<div class="empty-state"><h3>Propiedad no disponible</h3><p>Es posible que ya se haya vendido o alquilado. Consulta nuestra cartera actual o cuéntanos qué buscas.</p><a class="btn btn-dark" href="propiedades.html">Ver propiedades</a></div>`;
+    return;
+  }
+  pintar(p);
+});
+</script>
+<script src="cookie-consent.js"></script>
+</body>
+</html>

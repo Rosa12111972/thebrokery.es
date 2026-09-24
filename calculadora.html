@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de rentabilidad e hipoteca | The Brokery</title>
+<meta name="description" content="Calcula gratis la rentabilidad de una inversión inmobiliaria y cuánto necesitas ahorrado para tu hipoteca.">
+<link rel="icon" href="logo-the-brokery.svg">
+<link rel="stylesheet" href="brokery.css">
+<style>
+/* ---------- CALCULADORAS (rentabilidad + hipoteca) ---------- */
+.section-title{font-size:clamp(26px,4vw,38px);text-align:center;margin-bottom:14px;}
+.section-sub{text-align:center;color:var(--muted);max-width:640px;margin:0 auto 48px;font-size:16px;}
+
+.mortgage-section{ background:var(--bg-alt); }
+.mortgage-box{
+  max-width:1000px; margin:0 auto; background:var(--white);
+  border:1px solid var(--border); border-radius:10px; padding:40px;
+  display:grid; grid-template-columns:1fr 1fr; gap:44px;
+}
+.mortgage-results{ display:flex; flex-direction:column; gap:14px; }
+
+.cost-breakdown{ max-width:1000px; margin:56px auto 0; }
+.cost-breakdown h3{ font-size:22px; margin-bottom:10px; }
+.cost-breakdown h4{
+  font-family:var(--serif); font-weight:400; font-size:17px; color:var(--text);
+  margin:28px 0 10px; border-left:3px solid var(--accent); padding-left:10px;
+}
+.cost-intro{ color:var(--muted); font-size:15px; margin-bottom:20px; }
+.cost-note{ color:#555; font-size:14px; line-height:1.7; margin-top:12px; }
+.cost-table{
+  background:var(--white); border:1px solid var(--border); border-radius:10px;
+  overflow:hidden;
+}
+.cost-row{
+  display:grid; grid-template-columns:2fr 1fr 1.2fr; gap:10px;
+  padding:14px 20px; border-bottom:1px solid var(--border); font-size:14px;
+}
+.cost-row:last-child{ border-bottom:none; }
+.cost-row span:nth-child(2), .cost-row span:nth-child(3){ text-align:right; }
+.cost-row-head{
+  background:var(--bg-alt); text-transform:uppercase; font-size:11.5px; letter-spacing:1px; color:#888;
+}
+.cost-row-total{ background:#eef4f1; font-weight:700; color:var(--accent); }
+
+.calc-section{ background:var(--white); color:var(--text); }
+.calc-box{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:40px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:44px;
+}
+.calc-inputs h4{
+  font-family:var(--serif); font-weight:400; font-size:17px; color:var(--text);
+  margin:22px 0 14px; border-left:3px solid var(--accent); padding-left:10px;
+}
+.calc-inputs h4:first-child{ margin-top:0; }
+.calc-field{ margin-bottom:14px; }
+.calc-field label{ display:flex; justify-content:space-between; font-size:12.5px; color:#555; margin-bottom:6px; }
+.calc-field label span.val{ color:var(--accent); font-weight:600; }
+.calc-field input[type="number"]{
+  width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--border);
+  background:#fff; color:var(--text); font-size:14px;
+}
+.calc-field input[type="range"]{ width:100%; accent-color:var(--accent); }
+.calc-toggle{ display:flex; align-items:center; gap:10px; margin:18px 0 6px; }
+.calc-toggle input{ width:18px; height:18px; accent-color:var(--accent); }
+.calc-toggle label{ font-size:13px; color:#333; }
+.mortgage-fields{ display:none; }
+.mortgage-fields.active{ display:block; }
+
+.calc-results{ display:flex; flex-direction:column; gap:14px; }
+.result-card{
+  background:var(--white); border:1px solid var(--border); border-radius:8px;
+  padding:18px 20px;
+}
+.result-card .label{ font-size:11.5px; text-transform:uppercase; letter-spacing:1px; color:#888; margin-bottom:6px; }
+.result-card .value{ font-size:28px; font-family:var(--serif); color:var(--text); }
+.result-card .value.small{ font-size:20px; }
+.result-card .hint{ font-size:11.5px; color:#999; margin-top:4px; }
+.result-highlight{ border-color:var(--accent); background:linear-gradient(135deg,#fff,#eef4f1); }
+.result-highlight .value{ color:var(--accent); }
+.calc-cta{ margin-top:8px; }
+.form-note{ font-size:12px; color:#999; margin-top:10px; }
+
+@media(max-width:760px){
+  .mortgage-box, .calc-box{ grid-template-columns:1fr; }
+  .cost-row{ grid-template-columns:1fr; gap:2px; }
+}
+</style>
+</head>
+<body>
+<header data-plantilla></header>
+
+<!-- ============ CALCULADORA DE HIPOTECA ============ -->
+<section class="mortgage-section" id="hipoteca">
+  <div class="wrap">
+    <span class="eyebrow">Antes de comprar</span>
+    <h2 class="section-title">¿Cuánto necesitas ahorrado para tu hipoteca?</h2>
+    <p class="section-sub">Los bancos en España suelen financiar hasta un 80% del precio de compra. Calcula cuánto necesitas tener ahorrado para la entrada y los gastos.</p>
+
+    <div class="mortgage-box">
+      <div class="mortgage-inputs">
+        <div class="calc-field">
+          <label>Precio de la vivienda <span class="val" id="mh_v_precio">250.000 €</span></label>
+          <input type="range" id="mh_precio" min="50000" max="1000000" step="1000" value="250000">
+        </div>
+        <div class="calc-field">
+          <label>% que financia el banco <span class="val" id="mh_v_financiacion">80 %</span></label>
+          <input type="range" id="mh_financiacion" min="50" max="100" step="5" value="80">
+        </div>
+        <div class="calc-field">
+          <label>Gastos de compra (impuestos, notaría, registro, gestoría) <span class="val" id="mh_v_gastos">10 %</span></label>
+          <input type="range" id="mh_gastos" min="0" max="20" step="0.5" value="10">
+        </div>
+        <div class="calc-field">
+          <label>Tipo de interés (TIN) <span class="val" id="mh_v_interes">3 %</span></label>
+          <input type="range" id="mh_interes" min="0" max="10" step="0.05" value="3">
+        </div>
+        <div class="calc-field">
+          <label>Plazo <span class="val" id="mh_v_plazo">25 años</span></label>
+          <input type="range" id="mh_plazo" min="5" max="40" step="1" value="25">
+        </div>
+      </div>
+
+      <div class="mortgage-results">
+        <div class="result-card result-highlight">
+          <div class="label">Necesitas ahorrado</div>
+          <div class="value" id="mh_r_total">75.000 €</div>
+          <div class="hint">Entrada + gastos de compra</div>
+        </div>
+        <div class="result-card">
+          <div class="label">Entrada (no financiada)</div>
+          <div class="value small" id="mh_r_entrada">50.000 €</div>
+          <div class="hint">La parte del precio que el banco no cubre</div>
+        </div>
+        <div class="result-card">
+          <div class="label">Gastos de compra</div>
+          <div class="value small" id="mh_r_gastos">25.000 €</div>
+          <div class="hint">Impuestos, notaría, registro, gestoría</div>
+        </div>
+        <div class="result-card">
+          <div class="label">Importe de la hipoteca</div>
+          <div class="value small" id="mh_r_hipoteca">200.000 €</div>
+          <div class="hint">Lo que financiaría el banco</div>
+        </div>
+        <div class="result-card">
+          <div class="label">Cuota mensual estimada</div>
+          <div class="value small" id="mh_r_cuota">948 €</div>
+          <div class="hint">A tipo fijo, sin comisiones ni seguros</div>
+        </div>
+        <a class="btn btn-accent" id="mhWaBtn" style="width:100%; justify-content:center;">Enviar este cálculo a The Brokery</a>
+        <p class="form-note">Al pulsar se abrirá WhatsApp (o tu correo) con este mensaje. Trataremos los datos que nos envíes según nuestra <a href="privacidad.html" target="_blank">Política de Privacidad</a>.</p>
+      </div>
+    </div>
+
+    <div class="cost-breakdown">
+      <h3>¿En qué se van exactamente esos gastos de compra?</h3>
+      <p class="cost-intro">Para que no haya sorpresas, este es el desglose orientativo para una vivienda de segunda mano en España (los porcentajes exactos dependen de la comunidad autónoma donde compres):</p>
+
+      <div class="cost-table">
+        <div class="cost-row cost-row-head">
+          <span>Concepto</span>
+          <span>% aprox.</span>
+          <span>Ejemplo sobre 300.000 €</span>
+        </div>
+        <div class="cost-row">
+          <span>ITP (Impuesto de Transmisiones Patrimoniales)</span>
+          <span>6 – 10 %</span>
+          <span>18.000 – 30.000 €</span>
+        </div>
+        <div class="cost-row">
+          <span>Notaría</span>
+          <span>0,2 – 0,5 %</span>
+          <span>600 – 1.500 €</span>
+        </div>
+        <div class="cost-row">
+          <span>Registro de la Propiedad</span>
+          <span>0,1 – 0,25 %</span>
+          <span>300 – 750 €</span>
+        </div>
+        <div class="cost-row">
+          <span>Gestoría (tramitación, opcional)</span>
+          <span>—</span>
+          <span>300 – 500 €</span>
+        </div>
+        <div class="cost-row">
+          <span>Tasación (solo si pides hipoteca)</span>
+          <span>—</span>
+          <span>250 – 600 €</span>
+        </div>
+        <div class="cost-row cost-row-total">
+          <span>Total orientativo</span>
+          <span>≈ 7 – 11 %</span>
+          <span>≈ 21.000 – 33.000 €</span>
+        </div>
+      </div>
+      <p class="cost-note">El ITP es el mayor gasto y lo fija cada comunidad autónoma, así que conviene confirmar el porcentaje exacto de la zona donde compres (puede ser menor en casos concretos: familia numerosa, menores de 32 años u otros requisitos). Por eso la calculadora usa un 10% por defecto: es una cifra conservadora, para que siempre te sobre en vez de faltarte. Si compras obra nueva en vez de segunda mano, en lugar de ITP se paga IVA (10%) + AJD (entre 0,75% y 1,5% según la comunidad autónoma).</p>
+
+      <h4>¿Y las arras?</h4>
+      <p class="cost-note">Las arras (o "señal") <strong>no son un gasto adicional</strong>: es un adelanto del propio precio de la vivienda, normalmente entre el 5% y el 10%, que se paga al firmar el contrato de arras y se descuenta del precio final ante notario. Eso sí, es un contrato con consecuencias reales — si el comprador se echa atrás, pierde esa cantidad; si es el vendedor quien se echa atrás, tiene que devolver el doble. Te acompañamos en esa firma para que quede todo bien redactado y sin sustos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CALCULADORA DE RENTABILIDAD ============ -->
+<section class="calc-section" id="calculadora">
+  <div class="wrap">
+    <span class="eyebrow">Calculadora de inversión</span>
+    <h2 class="section-title">Calcula la rentabilidad real</h2>
+    <p class="section-sub">Introduce tus números reales (precio, gastos, alquiler, hipoteca) y obtén rentabilidad bruta, neta, cash flow y cash-on-cash al instante.</p>
+
+    <div class="calc-box">
+      <div class="calc-inputs">
+        <h4>Compra</h4>
+        <div class="calc-field">
+          <label>Precio de compra <span class="val" id="v_precio">150.000 €</span></label>
+          <input type="range" id="precio" min="20000" max="1000000" step="1000" value="150000">
+        </div>
+        <div class="calc-field">
+          <label>Gastos de compra (impuestos, notaría, gestoría) <span class="val" id="v_gastosCompraPct">10 %</span></label>
+          <input type="range" id="gastosCompraPct" min="0" max="20" step="0.5" value="10">
+        </div>
+        <div class="calc-field">
+          <label>Reforma / puesta a punto <span class="val" id="v_reforma">0 €</span></label>
+          <input type="range" id="reforma" min="0" max="100000" step="500" value="0">
+        </div>
+
+        <h4>Ingresos y gastos de alquiler</h4>
+        <div class="calc-field">
+          <label>Alquiler mensual esperado <span class="val" id="v_alquiler">800 €</span></label>
+          <input type="range" id="alquiler" min="0" max="6000" step="10" value="800">
+        </div>
+        <div class="calc-field">
+          <label>Comunidad + IBI + seguro (al mes) <span class="val" id="v_gastosMes">90 €</span></label>
+          <input type="range" id="gastosMes" min="0" max="1000" step="5" value="90">
+        </div>
+        <div class="calc-field">
+          <label>Vacancia / impagos estimados <span class="val" id="v_vacancia">5 %</span></label>
+          <input type="range" id="vacancia" min="0" max="30" step="1" value="5">
+        </div>
+        <div class="calc-field">
+          <label>Mantenimiento estimado <span class="val" id="v_mantenimiento">3 %</span></label>
+          <input type="range" id="mantenimiento" min="0" max="15" step="0.5" value="3">
+        </div>
+
+        <div class="calc-toggle">
+          <input type="checkbox" id="usaHipoteca">
+          <label for="usaHipoteca">Financio con hipoteca</label>
+        </div>
+        <div class="mortgage-fields" id="mortgageFields">
+          <h4 style="margin-top:0">Hipoteca</h4>
+          <div class="calc-field">
+            <label>Entrada <span class="val" id="v_entrada">20 %</span></label>
+            <input type="range" id="entrada" min="0" max="100" step="1" value="20">
+          </div>
+          <div class="calc-field">
+            <label>Tipo de interés (TIN) <span class="val" id="v_interes">3 %</span></label>
+            <input type="range" id="interes" min="0" max="10" step="0.05" value="3">
+          </div>
+          <div class="calc-field">
+            <label>Plazo <span class="val" id="v_plazo">25 años</span></label>
+            <input type="range" id="plazo" min="5" max="40" step="1" value="25">
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-results">
+        <div class="result-card result-highlight">
+          <div class="label">Rentabilidad bruta anual</div>
+          <div class="value" id="r_bruta">6,40 %</div>
+          <div class="hint">Alquiler anual / (precio + gastos de compra)</div>
+        </div>
+        <div class="result-card result-highlight">
+          <div class="label">Rentabilidad neta anual</div>
+          <div class="value" id="r_neta">4,85 %</div>
+          <div class="hint">Descontando gastos, vacancia y mantenimiento</div>
+        </div>
+        <div class="result-card">
+          <div class="label">Inversión inicial necesaria</div>
+          <div class="value small" id="r_inversion">165.000 €</div>
+          <div class="hint" id="r_inversion_hint">Precio + gastos de compra + reforma</div>
+        </div>
+        <div class="result-card">
+          <div class="label">Cash flow mensual estimado</div>
+          <div class="value small" id="r_cashflow">613 €</div>
+          <div class="hint">Alquiler neto − gastos mensuales − cuota hipoteca</div>
+        </div>
+        <div class="result-card">
+          <div class="label">Cash-on-cash return</div>
+          <div class="value small" id="r_coc">4,85 %</div>
+          <div class="hint">Cash flow anual / inversión inicial aportada</div>
+        </div>
+        <div class="calc-cta">
+          <a class="btn btn-accent" id="calcWaBtn" style="width:100%; justify-content:center;">Enviar estos datos a The Brokery</a>
+        <p class="form-note">Al pulsar se abrirá WhatsApp (o tu correo) con este mensaje. Trataremos los datos que nos envíes según nuestra <a href="privacidad.html" target="_blank">Política de Privacidad</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer data-plantilla></footer>
+
+<script src="legal-data.js"></script>
+<script src="brokery-comun.js"></script>
+<script>
+/* ---------- CALCULADORA DE RENTABILIDAD ---------- */
+const calcIds = ['precio','gastosCompraPct','reforma','alquiler','gastosMes','vacancia','mantenimiento','entrada','interes','plazo'];
+const calcEls = {};
+calcIds.forEach(id => calcEls[id] = document.getElementById(id));
+const usaHipoteca = document.getElementById('usaHipoteca');
+const mortgageFields = document.getElementById('mortgageFields');
+
+const fmtPct = n => n.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' %';
+
+function calcularCuotaHipoteca(principal, tinAnualPct, anios){
+  const i = (tinAnualPct/100)/12;
+  const n = anios*12;
+  if(i === 0) return principal/n;
+  return principal * (i * Math.pow(1+i, n)) / (Math.pow(1+i, n) - 1);
+}
+
+function recalcular(){
+  const precio = parseFloat(calcEls.precio.value);
+  const gastosCompraPct = parseFloat(calcEls.gastosCompraPct.value);
+  const reforma = parseFloat(calcEls.reforma.value);
+  const alquilerMensual = parseFloat(calcEls.alquiler.value);
+  const gastosMes = parseFloat(calcEls.gastosMes.value);
+  const vacanciaPct = parseFloat(calcEls.vacancia.value);
+  const mantenimientoPct = parseFloat(calcEls.mantenimiento.value);
+
+  document.getElementById('v_precio').textContent = fmtEUR(precio);
+  document.getElementById('v_gastosCompraPct').textContent = gastosCompraPct + ' %';
+  document.getElementById('v_reforma').textContent = fmtEUR(reforma);
+  document.getElementById('v_alquiler').textContent = fmtEUR(alquilerMensual);
+  document.getElementById('v_gastosMes').textContent = fmtEUR(gastosMes);
+  document.getElementById('v_vacancia').textContent = vacanciaPct + ' %';
+  document.getElementById('v_mantenimiento').textContent = mantenimientoPct + ' %';
+
+  const gastosCompra = precio * (gastosCompraPct/100);
+  const inversionTotal = precio + gastosCompra + reforma;
+
+  const alquilerAnualBruto = alquilerMensual * 12;
+  const perdidaVacancia = alquilerAnualBruto * (vacanciaPct/100);
+  const mantenimientoAnual = alquilerAnualBruto * (mantenimientoPct/100);
+  const gastosMesAnual = gastosMes * 12;
+  const gastosAnualesTotales = perdidaVacancia + mantenimientoAnual + gastosMesAnual;
+  const alquilerAnualNeto = alquilerAnualBruto - gastosAnualesTotales;
+
+  const rentabilidadBruta = inversionTotal > 0 ? (alquilerAnualBruto / inversionTotal) * 100 : 0;
+  const rentabilidadNeta = inversionTotal > 0 ? (alquilerAnualNeto / inversionTotal) * 100 : 0;
+
+  document.getElementById('r_bruta').textContent = fmtPct(rentabilidadBruta);
+  document.getElementById('r_neta').textContent = fmtPct(rentabilidadNeta);
+
+  let cuotaMensual = 0;
+  let aportacionInicial = inversionTotal;
+  let hintInversion = 'Precio + gastos de compra + reforma';
+
+  if(usaHipoteca.checked){
+    const entradaPct = parseFloat(calcEls.entrada.value);
+    const interesPct = parseFloat(calcEls.interes.value);
+    const plazoAnios = parseFloat(calcEls.plazo.value);
+
+    document.getElementById('v_entrada').textContent = entradaPct + ' %';
+    document.getElementById('v_interes').textContent = interesPct + ' %';
+    document.getElementById('v_plazo').textContent = plazoAnios + ' años';
+
+    const entradaImporte = precio * (entradaPct/100);
+    const principalFinanciado = precio - entradaImporte;
+    cuotaMensual = calcularCuotaHipoteca(principalFinanciado, interesPct, plazoAnios);
+    aportacionInicial = entradaImporte + gastosCompra + reforma;
+    hintInversion = 'Entrada + gastos de compra + reforma';
+  }
+
+  const gastosMensualesTotales = gastosMes + (mantenimientoAnual/12) + (perdidaVacancia/12);
+  const cashflowMensual = alquilerMensual - gastosMensualesTotales - cuotaMensual;
+  const cashflowAnual = cashflowMensual * 12;
+  const cashOnCash = aportacionInicial > 0 ? (cashflowAnual / aportacionInicial) * 100 : 0;
+
+  document.getElementById('r_inversion').textContent = fmtEUR(aportacionInicial);
+  document.getElementById('r_inversion_hint').textContent = hintInversion;
+  document.getElementById('r_cashflow').textContent = fmtEUR(Math.round(cashflowMensual)) + (cashflowMensual < 0 ? ' (negativo)' : '');
+  document.getElementById('r_coc').textContent = fmtPct(cashOnCash);
+
+  const waText =
+    `Hola, he usado la calculadora de rentabilidad de The Brokery y me gustaría hablar de este caso:\n`+
+    `Precio: ${fmtEUR(precio)}\n`+
+    `Gastos de compra: ${gastosCompraPct}% (${fmtEUR(gastosCompra)})\n`+
+    `Reforma: ${fmtEUR(reforma)}\n`+
+    `Alquiler mensual: ${fmtEUR(alquilerMensual)}\n`+
+    `Rentabilidad bruta: ${fmtPct(rentabilidadBruta)}\n`+
+    `Rentabilidad neta: ${fmtPct(rentabilidadNeta)}\n`+
+    (usaHipoteca.checked ? `Cash-on-cash: ${fmtPct(cashOnCash)}\n` : '')+
+    `¿Podemos revisarlo juntos?`;
+  document.getElementById('calcWaBtn').href = waLink(waText);
+  document.getElementById('calcWaBtn').setAttribute('rel', 'noopener');
+  if(CANAL === 'wa') document.getElementById('calcWaBtn').setAttribute('target', '_blank');
+}
+
+calcIds.forEach(id => calcEls[id].addEventListener('input', recalcular));
+usaHipoteca.addEventListener('change', function(){
+  mortgageFields.classList.toggle('active', this.checked);
+  recalcular();
+});
+
+recalcular();
+document.getElementById('calcWaBtn').addEventListener('click', () => trackMeta('Lead', { content_name: 'Calculadora de rentabilidad' }));
+
+/* ---------- CALCULADORA DE HIPOTECA ---------- */
+const mhIds = ['mh_precio', 'mh_financiacion', 'mh_gastos', 'mh_interes', 'mh_plazo'];
+const mhEls = {};
+mhIds.forEach(id => mhEls[id] = document.getElementById(id));
+
+function recalcularHipoteca(){
+  const precio = parseFloat(mhEls.mh_precio.value);
+  const financiacionPct = parseFloat(mhEls.mh_financiacion.value);
+  const gastosPct = parseFloat(mhEls.mh_gastos.value);
+  const interesPct = parseFloat(mhEls.mh_interes.value);
+  const plazoAnios = parseFloat(mhEls.mh_plazo.value);
+
+  document.getElementById('mh_v_precio').textContent = fmtEUR(precio);
+  document.getElementById('mh_v_financiacion').textContent = financiacionPct + ' %';
+  document.getElementById('mh_v_gastos').textContent = gastosPct + ' %';
+  document.getElementById('mh_v_interes').textContent = interesPct + ' %';
+  document.getElementById('mh_v_plazo').textContent = plazoAnios + ' años';
+
+  const entrada = precio * (1 - financiacionPct / 100);
+  const gastosCompra = precio * (gastosPct / 100);
+  const totalNecesario = entrada + gastosCompra;
+  const importeHipoteca = precio * (financiacionPct / 100);
+  const cuotaMensual = calcularCuotaHipoteca(importeHipoteca, interesPct, plazoAnios);
+
+  document.getElementById('mh_r_total').textContent = fmtEUR(totalNecesario);
+  document.getElementById('mh_r_entrada').textContent = fmtEUR(entrada);
+  document.getElementById('mh_r_gastos').textContent = fmtEUR(gastosCompra);
+  document.getElementById('mh_r_hipoteca').textContent = fmtEUR(importeHipoteca);
+  document.getElementById('mh_r_cuota').textContent = fmtEUR(Math.round(cuotaMensual));
+
+  const waText =
+    `Hola, he calculado cuánto necesito para una hipoteca en la web de The Brokery:\n`+
+    `Precio de la vivienda: ${fmtEUR(precio)}\n`+
+    `Financiación del banco: ${financiacionPct}% (${fmtEUR(importeHipoteca)})\n`+
+    `Necesito ahorrado: ${fmtEUR(totalNecesario)} (entrada + gastos)\n`+
+    `Cuota mensual estimada: ${fmtEUR(Math.round(cuotaMensual))}\n`+
+    `¿Me ayudáis a ver qué opciones tengo?`;
+  document.getElementById('mhWaBtn').href = waLink(waText);
+  document.getElementById('mhWaBtn').setAttribute('rel', 'noopener');
+  if(CANAL === 'wa') document.getElementById('mhWaBtn').setAttribute('target', '_blank');
+}
+
+mhIds.forEach(id => mhEls[id].addEventListener('input', recalcularHipoteca));
+recalcularHipoteca();
+document.getElementById('mhWaBtn').addEventListener('click', () => trackMeta('Lead', { content_name: 'Calculadora de hipoteca' }));
+</script>
+</body>
+</html>
