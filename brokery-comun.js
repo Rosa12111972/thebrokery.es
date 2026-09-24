@@ -277,7 +277,7 @@ const EQUIPO = [
     telefono:'+34 641 836 977', email:'Alvaro@TheBrokery.com', foto:'img/equipo-alvaro.jpg',
     bio:[], idiomas:[], especialidades:[] },
   { id:'rosa-rodriguez', nombre:'Rosa Rodríguez', cargo:'Gerente Comercial', subcargo:'',
-    telefono:'', email:'Rosa@TheBrokery.com', foto:'img/equipo-rosa.jpg',
+    telefono:'+34 698 222 520', email:'Rosa@TheBrokery.com', foto:'img/equipo-rosa.jpg',
     bio:[], idiomas:[], especialidades:[] },
   { id:'guillermo-rocafort', nombre:'Guillermo Rocafort Moreno', cargo:'Director de Desarrollo de Negocio', subcargo:'',
     telefono:'+34 669 797 659', email:'Guillermo@TheBrokery.com', foto:'img/equipo-guillermo.jpg',
