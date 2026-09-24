@@ -207,6 +207,18 @@ form .row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
 .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;}
 .rgpd-box{font-size:12.5px;line-height:1.55;border:1px solid var(--border);background:var(--bg-alt);padding:16px 18px;margin:6px 0 16px;}
 .rgpd-box table{width:100%;border-collapse:collapse;}
+
+/* ---------- FORMULARIOS DESPLEGABLES (filtraje vender / comprar) ---------- */
+.forms-grid{display:flex;flex-direction:column;gap:24px;}
+.form-card{background:#fff;border:1px solid var(--border);padding:36px;}
+.form-card h3{font-family:var(--serif);font-weight:500;font-size:20px;color:var(--ink);margin-bottom:6px;}
+.form-card .sub{color:var(--muted);font-size:13.5px;margin-bottom:20px;}
+.form-toggle{width:100%;justify-content:center;}
+.form-wrap{display:none;margin-top:22px;}
+.form-wrap.open{display:block;}
+.form-card h4{font-family:var(--serif);font-weight:500;font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text);margin:24px 0 12px;border-left:3px solid var(--accent);padding-left:10px;}
+.form-card h4:first-of-type{margin-top:0;}
+.form-card .btn{width:100%;justify-content:center;margin-top:8px;}
 .rgpd-box th{text-align:left;vertical-align:top;padding:3px 12px 3px 0;white-space:nowrap;font-weight:600;}
 .rgpd-box td{padding:3px 0;}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;margin-bottom:12px;cursor:pointer;}
