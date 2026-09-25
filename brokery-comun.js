@@ -285,6 +285,7 @@ const EQUIPO = [
     bio:[], idiomas:[], especialidades:[] },
   { id:'guillermo-rocafort', nombre:'Guillermo Rocafort Moreno', cargo:'Director de Desarrollo de Negocio', subcargo:'',
     telefono:'+34 669 797 659', email:'Guillermo@TheBrokery.com', foto:'img/equipo-guillermo.jpg',
+    redes:{ linkedin:'https://www.linkedin.com/in/guillermo-rocafort-moreno-50728445/' },
     bio:[], idiomas:[], especialidades:[] }
 ];
 
