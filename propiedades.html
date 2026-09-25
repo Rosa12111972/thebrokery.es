@@ -227,8 +227,8 @@ document.querySelectorAll('[data-vista]').forEach(b => b.addEventListener('click
     try{
       await cargarLeaflet();
       mapa = L.map('mapa', {scrollWheelZoom:false}).setView([40.45, -3.8], 10);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 18
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
       }).addTo(mapa);
       capa = L.layerGroup().addTo(mapa);
       pintarMapa();
