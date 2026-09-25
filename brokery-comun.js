@@ -277,6 +277,7 @@ const EQUIPO = [
     bio:[], idiomas:[], especialidades:[] },
   { id:'alvaro-corredor', nombre:'Álvaro Corredor Ochoa, PhD', cargo:'Director de Operaciones – España', subcargo:'Global Real Estate Professional',
     telefono:'+34 641 836 977', email:'Alvaro@TheBrokery.com', foto:'img/equipo-alvaro.jpg',
+    redes:{ linkedin:'https://www.linkedin.com/in/%C3%A1lvaro-corredor-ochoa-phd-4250732/' },
     bio:[], idiomas:[], especialidades:[] },
   { id:'rosa-rodriguez', nombre:'Rosa Rodríguez', cargo:'Gerente Comercial', subcargo:'',
     telefono:'+34 698 222 520', email:'Rosa@TheBrokery.com', foto:'img/equipo-rosa.jpg',
