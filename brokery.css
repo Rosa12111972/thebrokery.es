@@ -382,6 +382,8 @@ footer a:hover{color:#fff;}
 .agent-role{font-size:18px;font-weight:300;color:var(--text);padding-bottom:22px;margin-bottom:26px;border-bottom:2px solid var(--teal);display:inline-block;min-width:60%;}
 .agent-contact p{font-size:17px;margin-bottom:8px;}
 .agent-contact a:hover{color:var(--accent);}
+.agent-socials{font-size:12px!important;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.agent-socials a{color:var(--muted);}
 .agent-bio p{font-size:16.5px;line-height:1.85;margin-bottom:16px;}
 .agent-tags{display:flex;flex-wrap:wrap;gap:8px;list-style:none;}
 .agent-tags li{border:1px solid var(--border);padding:6px 12px;font-size:13px;}

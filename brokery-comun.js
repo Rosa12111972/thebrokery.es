@@ -272,6 +272,8 @@ document.querySelectorAll('footer[data-plantilla]').forEach(el => { el.innerHTML
 const EQUIPO = [
   { id:'oleg-bortman', nombre:'Oleg Bortman', cargo:'Cofundador', subcargo:'Associate Broker', lead:true,
     telefono:'+1 602 402 2296', email:'Oleg@TheBrokery.com', foto:'img/equipo-oleg.jpg',
+    redes:{ instagram:'https://www.instagram.com/olegbortman1/', youtube:'https://www.youtube.com/@olegbortman',
+             linkedin:'https://www.linkedin.com/in/oleg-bortman', minnect:'http://expert.minnect.com/@OlegBortman' },
     bio:[], idiomas:[], especialidades:[] },
   { id:'alvaro-corredor', nombre:'Álvaro Corredor Ochoa, PhD', cargo:'Director de Operaciones – España', subcargo:'Global Real Estate Professional',
     telefono:'+34 641 836 977', email:'Alvaro@TheBrokery.com', foto:'img/equipo-alvaro.jpg',

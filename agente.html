@@ -62,6 +62,8 @@ $('#agente').innerHTML = `
       <div class="agent-contact">
         ${a.telefono ? `<p><a href="${telHref(a.telefono)}">${esc(a.telefono)}</a></p>` : ''}
         <p><a href="mailto:${esc(a.email)}">${esc(a.email)}</a></p>
+        ${a.redes ? `<p class="agent-socials">${Object.entries({instagram:'Instagram',youtube:'YouTube',linkedin:'LinkedIn',minnect:'Minnect'})
+          .filter(([k]) => a.redes[k]).map(([k,label]) => `<a href="${esc(a.redes[k])}" target="_blank" rel="noopener">${label}</a>`).join(' · ')}</p>` : ''}
       </div>
       <h2 class="ficha-h">Sobre ${esc(nombreCorto)}</h2>
       <div class="agent-bio">${bio}</div>
