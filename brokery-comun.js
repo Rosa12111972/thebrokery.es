@@ -24,6 +24,7 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>'
 const pending = v => !v || v.startsWith('[COMPLETAR');
 const show = v => pending(v) ? `<span class="todo">${esc(v || '[COMPLETAR]')}</span>` : esc(v);
 const fmtEUR = n => n.toLocaleString('es-ES', {maximumFractionDigits:0, useGrouping:'always'}) + ' €';
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const waLink = text => BRAND.whatsapp
   ? `https://wa.me/${BRAND.whatsapp}?text=${encodeURIComponent(text)}`
   : `mailto:${BRAND.email}?subject=${encodeURIComponent('Contacto desde la web de The Brokery')}&body=${encodeURIComponent(text)}`;
@@ -301,4 +302,60 @@ function tarjetaEquipo(a){
     <p><a href="mailto:${esc(a.email)}">${esc(a.email)}</a></p>
     <p><a class="card-person-more" href="${urlAgente(a)}">Ver perfil →</a></p>
   </article>`;
+}
+
+/* ============================================================
+   ZONAS — zonas donde trabaja The Brokery España. Cada una tiene su
+   propia página (zonas/<slug>.html) con descripción y las propiedades
+   disponibles ahí. La sección de "Zonas" en boutique.html y el enlace
+   del menú permanecen ocultos hasta que haya al menos una.
+   ia:true añade la etiqueta «Imagen ilustrativa generada con IA».
+   ============================================================ */
+const BARRIOS = [
+  { slug:'madrid-capital', nombre:'Madrid capital', texto:'Salamanca, Chamberí, Retiro, Chamartín y los barrios más exclusivos de la ciudad.', foto:'img/zona-madrid.jpg' },
+  { slug:'aravaca-el-plantio', nombre:'Aravaca y El Plantío', texto:'Chalets y urbanizaciones dentro del municipio de Madrid, junto a la zona noroeste.', foto:'img/zona-aravaca.jpg', ia:true },
+  { slug:'la-moraleja', nombre:'La Moraleja y zona norte', texto:'Alcobendas, San Sebastián de los Reyes, La Moraleja y El Soto de La Moraleja.', foto:'img/zona-moraleja.jpg', ia:true },
+  { slug:'boadilla-del-monte', nombre:'Boadilla del Monte', texto:'Nuestra sede. Urbanizaciones con parcela, amplias zonas verdes y colegios de prestigio.', foto:'img/zona-boadilla.jpg', ia:true },
+  { slug:'pozuelo-de-alarcon', nombre:'Pozuelo de Alarcón', texto:'Residencial de alto standing, con urbanizaciones como Somosaguas y La Finca y colegios internacionales.', foto:'img/zona-pozuelo.jpg', ia:true },
+  { slug:'majadahonda', nombre:'Majadahonda', texto:'Una ciudad completa: amplia oferta comercial, servicios sanitarios de referencia y buena conexión con Madrid.', foto:'img/zona-majadahonda.jpg' },
+  { slug:'las-rozas', nombre:'Las Rozas', texto:'Urbanizaciones consolidadas, campos de golf y una gran oferta comercial y deportiva.', foto:'img/zona-las-rozas.jpg', ia:true },
+  { slug:'villafranca-del-castillo', nombre:'Villafranca del Castillo', texto:'Urbanización de chalets con parcela junto al castillo de Aulencia, en un entorno tranquilo y natural.', foto:'img/zona-villafranca.jpg', ia:true },
+  { slug:'torrelodones', nombre:'Torrelodones', texto:'A las puertas de la sierra: chalets en un entorno natural a pocos minutos de Madrid.', foto:'img/zona-torrelodones.jpg', ia:true }
+];
+
+const urlZona = b => `zona-${b.slug}.html`;
+
+/* Página individual de cada zona (zonas/<slug>.html). Muestra la
+   descripción de la zona y las propiedades disponibles ahí (buscando
+   el nombre de la zona dentro del campo "zona" de cada propiedad). */
+function renderZonaPage(slug){
+  const b = BARRIOS.find(x => x.slug === slug) || BARRIOS[0];
+  document.title = `${b.nombre} | The Brokery España`;
+  const desc = document.querySelector('meta[name="description"]');
+  if(desc) desc.setAttribute('content', `Propiedades en ${b.nombre}. ${b.texto}`);
+  $('#migaZona').textContent = b.nombre;
+  $('#zonaHero').innerHTML = `
+    <div class="zona-hero" style="${b.foto ? `background-image:url('${esc(b.foto)}')` : ''}">
+      ${b.ia ? '<span class="img-note">Imagen ilustrativa generada con IA</span>' : ''}
+      <div class="zona-hero-text">
+        <span class="eyebrow">Zonas donde trabajamos</span>
+        <h1 class="title">${esc(b.nombre)}</h1>
+        <p class="sub">${esc(b.texto)}</p>
+      </div>
+    </div>`;
+
+  cargarPropiedades().then(lista => {
+    const texto = norm(b.nombre);
+    const propias = lista.filter(p => norm(`${p.zona} ${p.titulo} ${p.ref}`).includes(texto));
+    const grid = $('#zonaPropsGrid');
+    if(propias.length){
+      grid.innerHTML = propias.map(p => tarjetaPropiedad(p)).join('');
+    } else {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+        <h3>Todavía no tenemos propiedades publicadas en ${esc(b.nombre)}</h3>
+        <p>Cuéntanos qué buscas y te avisamos en cuanto tengamos algo, incluida nuestra cartera privada.</p>
+        <a class="btn btn-dark" href="${waLink(`Hola, me interesa ${b.nombre}. ¿Qué propiedades tenéis en la zona?`)}"${nuevaPestana()}>Preguntar por esta zona</a>
+      </div>`;
+    }
+  });
 }

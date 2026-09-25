@@ -126,7 +126,6 @@ const TIPOS = {
   finca: /finca|casa de campo|r[úu]stic|cortijo|mas[ií]a/i
 };
 const tipoDe = p => Object.keys(TIPOS).find(k => TIPOS[k].test(`${p.tipo} ${p.titulo}`)) || 'otro';
-const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const POR_PAGINA = 12;
 
 let TODAS = [], filtradas = [], mostradas = POR_PAGINA, mapa = null, capa = null;

@@ -531,22 +531,6 @@
    ============================================================ */
 const PROPIEDADES = [];
 
-/* ZONAS — zonas donde trabaja The Brokery España. La sección y el
-   enlace del menú permanecen ocultos hasta que añadas al menos una.
-   Ejemplo: { nombre:'Boadilla del Monte', texto:'Urbanizaciones tranquilas…', foto:'boadilla.jpg', ia:true }
-   ia:true añade la etiqueta «Imagen ilustrativa generada con IA». */
-const BARRIOS = [
-  { nombre:'Madrid capital', texto:'Salamanca, Chamberí, Retiro, Chamartín y los barrios más exclusivos de la ciudad.', foto:'img/zona-madrid.jpg' },
-  { nombre:'Aravaca y El Plantío', texto:'Chalets y urbanizaciones dentro del municipio de Madrid, junto a la zona noroeste.', foto:'img/zona-aravaca.jpg', ia:true },
-  { nombre:'La Moraleja y zona norte', texto:'Alcobendas, San Sebastián de los Reyes, La Moraleja y El Soto de La Moraleja.', foto:'img/zona-moraleja.jpg', ia:true },
-  { nombre:'Boadilla del Monte', texto:'Nuestra sede. Urbanizaciones con parcela, amplias zonas verdes y colegios de prestigio.', foto:'img/zona-boadilla.jpg', ia:true },
-  { nombre:'Pozuelo de Alarcón', texto:'Residencial de alto standing, con urbanizaciones como Somosaguas y La Finca y colegios internacionales.', foto:'img/zona-pozuelo.jpg', ia:true },
-  { nombre:'Majadahonda', texto:'Una ciudad completa: amplia oferta comercial, servicios sanitarios de referencia y buena conexión con Madrid.', foto:'img/zona-majadahonda.jpg' },
-  { nombre:'Las Rozas', texto:'Urbanizaciones consolidadas, campos de golf y una gran oferta comercial y deportiva.', foto:'img/zona-las-rozas.jpg', ia:true },
-  { nombre:'Villafranca del Castillo', texto:'Urbanización de chalets con parcela junto al castillo de Aulencia, en un entorno tranquilo y natural.', foto:'img/zona-villafranca.jpg', ia:true },
-  { nombre:'Torrelodones', texto:'A las puertas de la sierra: chalets en un entorno natural a pocos minutos de Madrid.', foto:'img/zona-torrelodones.jpg', ia:true }
-];
-
 /* TESTIMONIOS — solo reseñas reales de clientes. Publicar reseñas
    falsas o no verificadas es una práctica comercial desleal
    (art. 27 bis Ley 3/1991 de Competencia Desleal, tras la Directiva Ómnibus).
@@ -581,7 +565,7 @@ cargarPropiedades().then(lista => { if(lista.length){ PROPIEDADES.push(...lista)
 /* ---------- barrios ---------- */
 if(BARRIOS.length){
   $('#barrios').hidden = false;
-  $('#barriosGrid').innerHTML = BARRIOS.map(b => `<a class="barrio" href="propiedades.html?zona=${encodeURIComponent(b.nombre)}" style="${b.foto ? `background-image:url('${esc(b.foto)}'),linear-gradient(160deg,#5b5b5b,#231f20)` : ''}">${b.ia ? '<span class="img-note">Imagen ilustrativa generada con IA</span>' : ''}<h3>${esc(b.nombre)}</h3><p>${esc(b.texto || '')}</p></a>`).join('');
+  $('#barriosGrid').innerHTML = BARRIOS.map(b => `<a class="barrio" href="${urlZona(b)}" style="${b.foto ? `background-image:url('${esc(b.foto)}'),linear-gradient(160deg,#5b5b5b,#231f20)` : ''}">${b.ia ? '<span class="img-note">Imagen ilustrativa generada con IA</span>' : ''}<h3>${esc(b.nombre)}</h3><p>${esc(b.texto || '')}</p></a>`).join('');
   // Si una foto aún no está subida, la tarjeta se queda con el fondo gris y sin etiqueta de IA.
   document.querySelectorAll('#barriosGrid .barrio').forEach((card, i) => {
     const b = BARRIOS[i];
