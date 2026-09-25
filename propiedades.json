@@ -1,1 +1,54 @@
-[]
+[
+ {
+  "ref": "000001",
+  "titulo": "Elegante casa adosada  con terraza en Montepríncipe | The Brokery",
+  "tipo": "Chalet",
+  "operacion": "Alquiler",
+  "precio": 4000,
+  "precioAlquiler": null,
+  "zona": "Urb. este - Montepríncipe, Boadilla del Monte",
+  "dormitorios": 5,
+  "banos": 4,
+  "m2": 450,
+  "parcela": 100,
+  "cee": "G",
+  "destacado": false,
+  "fotos": [
+   "https://fotos15.apinmo.com/14559/30335312/7-1.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-2.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-3.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-4.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-5.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-6.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-7.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-8.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-9.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-10.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-11.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-12.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-13.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-14.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-15.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-16.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-17.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-18.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-19.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-20.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-21.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-22.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-23.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-24.jpg",
+   "https://fotos15.apinmo.com/14559/30335312/7-25.jpg"
+  ],
+  "descripcion": "Excepcional casa adosada de 450 m² con terraza en Montepríncipe | The Brokery\n\nDesde The Brokery os presentamos esta excelente propiedad lista para entrar a vivir de inmediato y pensada para quienes buscan un estilo de vida sofisticado, funcional y sin pretensiones.\n\nUbicada en una de las zonas residenciales más codiciadas de Montepríncipe (Boadilla del Monte), esta casa totalmente exterior destaca por sus generosos espacios y su atmósfera luminosa.\n\nDistribución y confort:\n\nZonas de estar: Dos amplios salones independientes y una cocina totalmente equipada con zona de comedor independiente.\n\nDescanso y baños: Cinco dormitorios provistos de armarios empotrados a medida y cuatro baños completos (dos con ducha y dos con bañera). La planta superior cuenta además con aire acondicionado para garantizar el máximo confort durante los meses más cálidos.\n\nExtras que marcan la diferencia: Agradable terraza privada, trastero, plaza de aparcamiento y armarios empotrados adicionales en planta baja.\n\nCalidades: Suelos de madera y cerámica, carpintería de madera y calefacción individual de gas por radiadores.\n\nNota importante: La vivienda se entrega sin amueblar, admite mascotas y está reservada estrictamente para alquiler de larga duración para familias (no se admiten estudiantes ni profesionales compartiendo vivienda). La propiedad no dispone de ascensor.\n\nEl entorno (Montepríncipe):\nVivir aquí significa disfrutar de un enclave residencial consolidado, tranquilo y rodeado de amplias zonas verdes que garantizan la máxima privacidad. En las inmediaciones encontraréis los colegios más prestigiosos de la Comunidad de Madrid, hospitales de referencia, centros deportivos y una selecta oferta comercial y de ocio. Además, cuenta con unas comunicaciones inmejorables, con acceso rápido a la M-40 y la M-50 para conectar cómodamente con el centro de Madrid.\n",
+  "extras": [],
+  "m2Utiles": 420,
+  "conservacion": "Para reformar",
+  "antiguedad": 1979,
+  "planta": "0",
+  "coords": [
+   40.404,
+   -3.844
+  ]
+ }
+]
