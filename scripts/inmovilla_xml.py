@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 
 URL = os.environ.get('INMOVILLA_XML_URL', '').strip()
 SALIDA = os.environ.get('SALIDA', 'propiedades.json')
-MAX_FOTOS = 25
+MAX_FOTOS = 150
 
 # Características (campos 0/1 del XML) que se muestran en la ficha.
 EXTRAS = {
@@ -50,7 +50,7 @@ def convertir(p):
     venta = numero(p, 'precioinmo')
     alquiler = numero(p, 'precioalq')
     es_alquiler = 'alquil' in accion.lower() and not venta
-    fotos = [texto(p, f'foto{i}') for i in range(1, 40)]
+    fotos = [texto(p, f'foto{i}') for i in range(1, 151)]
     fotos = [f for f in fotos if f.startswith('http')][:MAX_FOTOS]
     tipo = texto(p, 'tipo_ofer')
     zona = texto(p, 'zona')

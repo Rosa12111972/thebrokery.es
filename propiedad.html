@@ -38,14 +38,20 @@ const CEE_LETRAS = ['A','B','C','D','E','F','G'];
 function galeria(fotos){
   if(!fotos.length) return '<div class="gallery"><div class="gallery-main"></div></div>';
   return `<div class="gallery">
-    <div class="gallery-main" id="gMain" style="background-image:url('${esc(fotos[0])}')" role="img" aria-label="Foto 1 de ${fotos.length}">
+    <div class="gallery-main" id="gMain" style="background-image:url('${esc(fotos[0])}')" role="img" aria-label="Foto 1 de ${fotos.length}" data-idx="0" tabindex="0">
       ${fotos.length > 1 ? `<button type="button" class="gallery-nav prev" aria-label="Foto anterior">‹</button><button type="button" class="gallery-nav next" aria-label="Foto siguiente">›</button>` : ''}
       <span class="gallery-count" id="gCount">1 / ${fotos.length}</span>
     </div>
     <div class="gallery-side">
-      <div style="background-image:url('${esc(fotos[1] || fotos[0])}')"></div>
-      <div style="background-image:url('${esc(fotos[2] || fotos[0])}')"></div>
+      <div style="background-image:url('${esc(fotos[1] || fotos[0])}')" data-idx="${fotos[1] ? 1 : 0}" tabindex="0"></div>
+      <div style="background-image:url('${esc(fotos[2] || fotos[0])}')" data-idx="${fotos[2] ? 2 : 0}" tabindex="0"></div>
     </div>
+  </div>
+  <div class="lightbox" id="lightbox" hidden>
+    <button type="button" class="lightbox-close" aria-label="Cerrar">×</button>
+    ${fotos.length > 1 ? `<button type="button" class="lightbox-nav prev" aria-label="Foto anterior">‹</button><button type="button" class="lightbox-nav next" aria-label="Foto siguiente">›</button>` : ''}
+    <img id="lbImg" src="" alt="">
+    <span class="lightbox-count" id="lbCount"></span>
   </div>`;
 }
 
@@ -116,12 +122,43 @@ function pintar(p){
     i = (i + d + fotos.length) % fotos.length;
     $('#gMain').style.backgroundImage = `url('${fotos[i].replace(/'/g, '%27')}')`;
     $('#gMain').setAttribute('aria-label', `Foto ${i + 1} de ${fotos.length}`);
+    $('#gMain').dataset.idx = i;
     $('#gCount').textContent = `${i + 1} / ${fotos.length}`;
   };
   const prev = $('.gallery-nav.prev'), next = $('.gallery-nav.next');
   if(prev) prev.addEventListener('click', () => mover(-1));
   if(next) next.addEventListener('click', () => mover(1));
   document.addEventListener('keydown', e => { if(fotos.length > 1 && e.key === 'ArrowLeft') mover(-1); if(fotos.length > 1 && e.key === 'ArrowRight') mover(1); });
+
+  // Lightbox: ver las fotos a pantalla completa
+  if(fotos.length){
+    const lb = $('#lightbox'), lbImg = $('#lbImg'), lbCount = $('#lbCount');
+    let li = 0;
+    const pintarLB = () => {
+      lbImg.src = fotos[li];
+      lbImg.alt = `Foto ${li + 1} de ${fotos.length}`;
+      lbCount.textContent = `${li + 1} / ${fotos.length}`;
+    };
+    const abrirLB = idx => { li = idx; pintarLB(); lb.hidden = false; };
+    const cerrarLB = () => { lb.hidden = true; };
+    const moverLB = d => { li = (li + d + fotos.length) % fotos.length; pintarLB(); };
+
+    document.querySelectorAll('.gallery-main, .gallery-side div').forEach(el => {
+      el.addEventListener('click', () => abrirLB(parseInt(el.dataset.idx, 10) || 0));
+      el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abrirLB(parseInt(el.dataset.idx, 10) || 0); } });
+    });
+    $('.lightbox-close').addEventListener('click', cerrarLB);
+    lb.addEventListener('click', e => { if(e.target === lb) cerrarLB(); });
+    const lbPrev = $('.lightbox-nav.prev'), lbNext = $('.lightbox-nav.next');
+    if(lbPrev) lbPrev.addEventListener('click', e => { e.stopPropagation(); moverLB(-1); });
+    if(lbNext) lbNext.addEventListener('click', e => { e.stopPropagation(); moverLB(1); });
+    document.addEventListener('keydown', e => {
+      if(lb.hidden) return;
+      if(e.key === 'Escape') cerrarLB();
+      if(fotos.length > 1 && e.key === 'ArrowLeft') moverLB(-1);
+      if(fotos.length > 1 && e.key === 'ArrowRight') moverLB(1);
+    });
+  }
 
   // Mapa aproximado, solo si el visitante lo pide
   const verMapa = $('#verMapa');

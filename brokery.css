@@ -340,11 +340,21 @@ footer a:hover{color:#fff;}
 
 /* ---------- FICHA DE PROPIEDAD ---------- */
 .gallery{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-top:10px;}
-.gallery-main{position:relative;aspect-ratio:3/2;background:#ddd center/cover no-repeat;}
+.gallery-main{position:relative;aspect-ratio:3/2;background:#ddd center/cover no-repeat;cursor:zoom-in;}
 .gallery-side{display:grid;grid-template-rows:1fr 1fr;gap:10px;}
-.gallery-side div{background:#ddd center/cover no-repeat;}
-.gallery-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45);color:#fff;border:none;width:46px;height:46px;font-size:22px;cursor:pointer;}
+.gallery-side div{background:#ddd center/cover no-repeat;cursor:zoom-in;}
+.gallery-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45);color:#fff;border:none;width:46px;height:46px;font-size:22px;cursor:pointer;z-index:2;}
 .gallery-nav.prev{left:12px}.gallery-nav.next{right:12px}
+
+/* ---------- LIGHTBOX (galería a pantalla completa) ---------- */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:999;display:flex;align-items:center;justify-content:center;}
+.lightbox[hidden]{display:none;}
+.lightbox img{max-width:92vw;max-height:86vh;object-fit:contain;}
+.lightbox-close{position:absolute;top:18px;right:24px;background:none;border:none;color:#fff;font-size:34px;line-height:1;cursor:pointer;}
+.lightbox-count{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;letter-spacing:1px;background:rgba(255,255,255,.12);padding:6px 14px;}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);color:#fff;border:none;width:52px;height:52px;font-size:26px;cursor:pointer;}
+.lightbox-nav.prev{left:18px}.lightbox-nav.next{right:18px}
+.lightbox-nav:hover,.lightbox-close:hover{background:rgba(255,255,255,.25);}
 .gallery-count{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:4px 10px;letter-spacing:1px;}
 .ficha-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:60px;margin-top:50px;}
 .ficha-price{font-size:clamp(28px,3.4vw,40px);font-weight:300;letter-spacing:1px;color:var(--ink);}
