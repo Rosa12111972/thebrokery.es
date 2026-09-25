@@ -581,7 +581,7 @@ cargarPropiedades().then(lista => { if(lista.length){ PROPIEDADES.push(...lista)
 /* ---------- barrios ---------- */
 if(BARRIOS.length){
   $('#barrios').hidden = false;
-  $('#barriosGrid').innerHTML = BARRIOS.map(b => `<a class="barrio" href="${waLink(`Hola, me interesa ${b.nombre}. ¿Qué propiedades tenéis en la zona?`)}"${nuevaPestana()} style="${b.foto ? `background-image:url('${esc(b.foto)}'),linear-gradient(160deg,#5b5b5b,#231f20)` : ''}">${b.ia ? '<span class="img-note">Imagen ilustrativa generada con IA</span>' : ''}<h3>${esc(b.nombre)}</h3><p>${esc(b.texto || '')}</p></a>`).join('');
+  $('#barriosGrid').innerHTML = BARRIOS.map(b => `<a class="barrio" href="propiedades.html?zona=${encodeURIComponent(b.nombre)}" style="${b.foto ? `background-image:url('${esc(b.foto)}'),linear-gradient(160deg,#5b5b5b,#231f20)` : ''}">${b.ia ? '<span class="img-note">Imagen ilustrativa generada con IA</span>' : ''}<h3>${esc(b.nombre)}</h3><p>${esc(b.texto || '')}</p></a>`).join('');
   // Si una foto aún no está subida, la tarjeta se queda con el fondo gris y sin etiqueta de IA.
   document.querySelectorAll('#barriosGrid .barrio').forEach((card, i) => {
     const b = BARRIOS[i];
