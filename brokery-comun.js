@@ -280,6 +280,7 @@ const EQUIPO = [
     bio:[], idiomas:[], especialidades:[] },
   { id:'rosa-rodriguez', nombre:'Rosa Rodríguez', cargo:'Gerente Comercial', subcargo:'',
     telefono:'+34 698 222 520', email:'Rosa@TheBrokery.com', foto:'img/equipo-rosa.jpg',
+    redes:{ linkedin:'https://www.linkedin.com/in/rosa-rodr%C3%ADguez-50b741b4/' },
     bio:[], idiomas:[], especialidades:[] },
   { id:'guillermo-rocafort', nombre:'Guillermo Rocafort Moreno', cargo:'Director de Desarrollo de Negocio', subcargo:'',
     telefono:'+34 669 797 659', email:'Guillermo@TheBrokery.com', foto:'img/equipo-guillermo.jpg',
